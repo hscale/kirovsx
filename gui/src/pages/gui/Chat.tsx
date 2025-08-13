@@ -96,8 +96,54 @@ function fallbackRender({ error, resetErrorBoundary }: any) {
 }
 
 export function Chat() {
+  const [kiroTasks, setKiroTasks] = useState<{
+    currentTask: any | null;
+    queue: any[];
+  }>({ currentTask: null, queue: [] });
+
+  const TasksStrip = () => (
+    <div className="mx-2 mb-1 mt-1 rounded-md border border-[var(--vscode-input-border)] bg-[var(--vscode-editor-background)] p-2">
+      <div className="flex items-center justify-between">
+        <div className="text-xs font-semibold">Tasks</div>
+        <div className="flex gap-2">
+          <span
+            className="cursor-pointer text-xs opacity-80 hover:underline"
+            onClick={() =>
+              ideMessenger.post("kiro/showTasksPanel", undefined as any)
+            }
+          >
+            Open list
+          </span>
+        </div>
+      </div>
+      <div className="mt-1 flex gap-4 text-xs">
+        <div>
+          <span className="opacity-70">Current:</span>{" "}
+          {kiroTasks.currentTask?.title ?? "—"}
+        </div>
+        <div>
+          <span className="opacity-70">Queue:</span>{" "}
+          {kiroTasks.queue?.length ?? 0}
+        </div>
+      </div>
+    </div>
+  );
   const dispatch = useAppDispatch();
   const ideMessenger = useContext(IdeMessengerContext);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await ideMessenger.request(
+          "kiro/getTasksState",
+          undefined as any,
+        );
+        if (res.status === "success") {
+          // @ts-ignore
+          setKiroTasks(res.content);
+        }
+      } catch {}
+    })();
+  }, [ideMessenger]);
   const onboardingCard = useOnboardingCard();
   const showSessionTabs = useAppSelector(
     (store) => store.config.config.ui?.showSessionTabs,
@@ -389,6 +435,7 @@ export function Chat() {
     <>
       {!!showSessionTabs && !isInEdit && <TabBar ref={tabsRef} />}
       {widget}
+      <TasksStrip />
 
       <StepsDiv
         ref={stepsDivRef}

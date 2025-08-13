@@ -1,43 +1,53 @@
-<!-- Plugin description -->
+<div align="center">
 
-<h1 align="center">Continue</h1>
+![Continue logo](media/readme.png)
+
+</div>
+
+<h1 align="center">KiroVSX</h1>
 
 <div align="center">
 
-[**Continue**](https://docs.continue.dev) enables developers to create, share, and use custom AI code assistants with our open-source [JetBrains extension](https://plugins.jetbrains.com/plugin/22707-continue-extension) and [hub of models, rules, prompts, docs, and other building blocks](https://hub.continue.dev).
+**[KiroVSX](https://github.com/hscale/kirovsx) is an AI code assistant enhanced with Kiro methodology, built on Continue's architecture.
+It provides progressive context building, institutional memory, and smart task management for developers.
+Fork of Continue Dev with Kiro methodology integration.**
 
 </div>
 
 <div align="center">
 
-## Chat
+<a target="_blank" href="https://opensource.org/licenses/Apache-2.0" style="background:none">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" style="height: 22px;" />
+</a>
 
-[Chat](https://continue.dev/docs/chat/how-to-use-it) makes it easy to ask for help from an LLM without needing to leave the IDE.
+## 🚀 KiroVSX Features
 
-You send it a task, including any relevant information, and it replies with the text / code most likely to complete the task. If it does not give you what you want, then you can send follow up messages to clarify and adjust its approach until the task is completed.
+### 📋 Progressive Context Building
 
-## Autocomplete
+KiroVSX implements Kiro's methodology with progressive context building through phases:
 
-[Autocomplete](https://continue.dev/docs/autocomplete/how-to-use-it) provides inline code suggestions as you type.
+- **Requirements Phase**: Define what needs to be built
+- **Design Phase**: Architect how it will be built
+- **Tasks Phase**: Break down implementation steps
 
-To enable it, simply click the "Continue" button in the status bar at the bottom right of your IDE or ensure the "Enable Tab Autocomplete" option is checked in your IDE settings.
+### 🧠 Institutional Memory
 
-## Edit
+Enhanced with Kiro's steering system for maintaining project knowledge:
 
-[Edit](https://continue.dev/docs/edit/how-to-use-it) is a convenient way to modify code without leaving your current file.
+- **Steering Rules**: Project-specific guidelines and standards
+- **Context Injection**: Automatic context awareness in AI conversations
+- **Smart Rule Selection**: AI-powered selection of relevant institutional knowledge
 
-Highlight a block of code, describe your code changes, and a diff will be streamed inline to your file which you can accept or reject.
+### ⚡ Smart Task Management
 
-## Agent
+- **Auto-generated Task Buttons**: Convert markdown tasks to executable actions
+- **Task Queue**: Intelligent task prioritization and execution
+- **Hook System**: Event-driven automation with natural language configuration
 
-[Agent](https://continue.dev/docs/agent/how-to-use-it) enables you to make more substantial changes to your codebase
+## Contributing
 
-Agent equips the Chat model with the tools needed to handle a wide range of coding tasks, allowing the model to make decisions and save you the work of manually finding context and performing actions.
-
-</div>
+See [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to contribute to the project.
 
 ## License
 
-[Apache 2.0 © 2023-2025 Continue Dev, Inc.](./LICENSE)
-
-<!-- Plugin description end -->
+[Apache 2.0 © 2023-2024 Continue Dev, Inc.](./LICENSE)

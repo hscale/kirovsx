@@ -48,6 +48,9 @@ export type ToIdeFromWebviewProtocol = ToIdeFromWebviewOrCoreProtocol & {
   ];
   "edit/addCurrentSelection": [undefined, void];
   "edit/clearDecorations": [undefined, void];
+  // Kiro custom messages
+  "kiro/getTasksState": [undefined, { currentTask: any | null; queue: any[] }];
+  "kiro/showTasksPanel": [undefined, void];
 };
 
 export type ToWebviewFromIdeProtocol = ToWebviewFromIdeOrCoreProtocol & {
@@ -77,4 +80,6 @@ export type ToWebviewFromIdeProtocol = ToWebviewFromIdeOrCoreProtocol & {
   exitEditMode: [undefined, void];
   focusEdit: [undefined, void];
   generateRule: [undefined, void];
+  // Kiro push update (optional)
+  "kiro/tasksStatePush": [{ currentTask: any | null; queue: any[] }, void];
 };

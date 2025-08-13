@@ -22,7 +22,20 @@ export function getNonce() {
 }
 
 export function getExtensionUri(): vscode.Uri {
-  return vscode.extensions.getExtension("Continue.continue")!.extensionUri;
+  // Try KiroVSX first, then fallback to Continue for compatibility
+  const kiroExtension = vscode.extensions.getExtension("KiroVSX.kirovsx");
+  if (kiroExtension) {
+    return kiroExtension.extensionUri;
+  }
+
+  const continueExtension = vscode.extensions.getExtension("Continue.continue");
+  if (continueExtension) {
+    return continueExtension.extensionUri;
+  }
+
+  // If neither found, try to get current extension context
+  // This should not happen in normal operation
+  throw new Error("Cannot find KiroVSX or Continue extension URI");
 }
 
 export function getViewColumnOfFile(

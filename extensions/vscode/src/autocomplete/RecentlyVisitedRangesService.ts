@@ -117,11 +117,12 @@ export class RecentlyVisitedRangesService {
         (s) =>
           !currentFilepath ||
           (s.filepath !== currentFilepath &&
-            // Exclude Continue's own output as it makes it super-hard for users to test the autocomplete feature
+            // Exclude Continue/KiroVSX's own output as it makes it super-hard for users to test the autocomplete feature
             // while looking at the prompts in the Continue's output
             !s.filepath.startsWith(
               "output:extension-output-Continue.continue",
-            )),
+            ) &&
+            !s.filepath.startsWith("output:extension-output-KiroVSX.kirovsx")),
       )
       .sort((a, b) => b.timestamp - a.timestamp)
       .map(({ timestamp, ...snippet }) => snippet);

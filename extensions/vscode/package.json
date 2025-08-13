@@ -365,6 +365,100 @@
         "category": "Continue",
         "title": "Generate Rule",
         "group": "Continue"
+      },
+      {
+        "command": "kiro.addSpec",
+        "title": "Add Spec",
+        "icon": "$(add)"
+      },
+      {
+        "command": "kiro.refreshSpecs",
+        "title": "Refresh Specs",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.addHook",
+        "title": "Add Hook",
+        "icon": "$(add)"
+      },
+      {
+        "command": "kiro.refreshHooks",
+        "title": "Refresh Hooks",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.generateSteering",
+        "title": "Generate Steering",
+        "icon": "$(wand)"
+      },
+      {
+        "command": "kiro.refreshSteering",
+        "title": "Refresh Steering",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.connectMCP",
+        "title": "Add MCP Server",
+        "icon": "$(add)"
+      },
+      {
+        "command": "kiro.refreshMCP",
+        "title": "Refresh MCP",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.openSpecPhase",
+        "title": "Open Spec Phase"
+      },
+      {
+        "command": "kiro.openRequirements",
+        "title": "Open Requirements",
+        "icon": "$(list-unordered)"
+      },
+      {
+        "command": "kiro.openDesign",
+        "title": "Open Design",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "kiro.openTasks",
+        "title": "Open Tasks",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "kiro.startTaskFromLine",
+        "title": "Start task"
+      },
+      {
+        "command": "kiro.enqueueTaskFromLine",
+        "title": "Queue task"
+      },
+      {
+        "command": "kiro.newTaskVibe",
+        "title": "New Task • Vibe",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "kiro.newTaskSpec",
+        "title": "New Task • Spec",
+        "icon": "$(book)"
+      },
+      {
+        "command": "kiro.composeFlow123Prompt",
+        "title": "Compose Flow 1-2-3 Context",
+        "icon": "$(symbol-structure)"
+      },
+      {
+        "command": "kiro.generateRequirements",
+        "title": "Generate Requirements (Kiro)"
+      },
+      {
+        "command": "kiro.generateDesign",
+        "title": "Generate Design (Kiro)"
+      },
+      {
+        "command": "kiro.generateTasks",
+        "title": "Generate Tasks (Kiro)"
       }
     ],
     "keybindings": [
@@ -590,6 +684,46 @@
           "command": "continue.clearConsole",
           "group": "navigation@1",
           "when": "view == continue.continueConsoleView"
+        },
+        {
+          "command": "kiro.addSpec",
+          "when": "view == kiro.views.specExplorer",
+          "group": "navigation@0"
+        },
+        {
+          "command": "kiro.refreshSpecs",
+          "when": "view == kiro.views.specExplorer",
+          "group": "navigation@2"
+        },
+        {
+          "command": "kiro.addHook",
+          "when": "view == kiro.views.hooksStatus",
+          "group": "navigation@0"
+        },
+        {
+          "command": "kiro.refreshHooks",
+          "when": "view == kiro.views.hooksStatus",
+          "group": "navigation@2"
+        },
+        {
+          "command": "kiro.generateSteering",
+          "when": "view == kiro.views.steeringExplorer",
+          "group": "navigation@0"
+        },
+        {
+          "command": "kiro.refreshSteering",
+          "when": "view == kiro.views.steeringExplorer",
+          "group": "navigation@2"
+        },
+        {
+          "command": "kiro.connectMCP",
+          "when": "view == kiro.views.mcpServerStatus",
+          "group": "navigation@0"
+        },
+        {
+          "command": "kiro.refreshMCP",
+          "when": "view == kiro.views.mcpServerStatus",
+          "group": "navigation@2"
         }
       ],
       "editor/title": [
@@ -602,6 +736,38 @@
           "command": "continue.viewHistory",
           "group": "navigation@2",
           "when": "activeWebviewPanelId == continue.continueGUIView"
+        },
+        {
+          "command": "kiro.showTasksPanel",
+          "group": "navigation@3",
+          "when": "view == continue.continueGUIView || activeWebviewPanelId == continue.continueGUIView",
+          "alt": "kiro.showTasksPanel",
+          "icon": "$(list-selection)"
+        },
+        {
+          "command": "kiro.newTaskVibe",
+          "group": "navigation@4",
+          "when": "view == continue.continueGUIView || activeWebviewPanelId == continue.continueGUIView"
+        },
+        {
+          "command": "kiro.newTaskSpec",
+          "group": "navigation@5",
+          "when": "view == continue.continueGUIView || activeWebviewPanelId == continue.continueGUIView"
+        },
+        {
+          "command": "kiro.openRequirements",
+          "group": "navigation@1",
+          "when": "resourceExtname == .md && resourcePath =~ /\\/.kiro\\/specs\\// && (resourceFilename == requirements.md || resourceFilename == design.md || resourceFilename == tasks.md)"
+        },
+        {
+          "command": "kiro.openDesign",
+          "group": "navigation@2",
+          "when": "resourceExtname == .md && resourcePath =~ /\\/.kiro\\/specs\\// && (resourceFilename == requirements.md || resourceFilename == design.md || resourceFilename == tasks.md)"
+        },
+        {
+          "command": "kiro.openTasks",
+          "group": "navigation@3",
+          "when": "resourceExtname == .md && resourcePath =~ /\\/.kiro\\/specs\\// && (resourceFilename == requirements.md || resourceFilename == design.md || resourceFilename == tasks.md)"
         }
       ],
       "terminal/context": [
@@ -611,12 +777,59 @@
         }
       ]
     },
+    "kiro.commands": [
+      {
+        "command": "kiro.addSpec",
+        "title": "Add Spec",
+        "icon": "$(add)"
+      },
+      {
+        "command": "kiro.refreshSpecs",
+        "title": "Refresh Specs",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.addHook",
+        "title": "Add Hook",
+        "icon": "$(add)"
+      },
+      {
+        "command": "kiro.refreshHooks",
+        "title": "Refresh Hooks",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.generateSteering",
+        "title": "Generate Steering",
+        "icon": "$(wand)"
+      },
+      {
+        "command": "kiro.refreshSteering",
+        "title": "Refresh Steering",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.refreshMCP",
+        "title": "Refresh MCP",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.connectMCP",
+        "title": "Connect MCP",
+        "icon": "$(add)"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
           "id": "continue",
           "title": "Continue",
           "icon": "media/sidebar-icon.png"
+        },
+        {
+          "id": "kiro",
+          "title": "Kiro",
+          "icon": "media/kiro-icon.png"
         }
       ],
       "panel": [
@@ -645,6 +858,28 @@
           "icon": "$(window)",
           "visibility": "visible",
           "when": "config.continue.enableConsole"
+        }
+      ],
+      "kiro": [
+        {
+          "id": "kiro.views.specExplorer",
+          "name": "Specs"
+        },
+        {
+          "id": "kiro.views.steeringExplorer",
+          "name": "Steering"
+        },
+        {
+          "id": "kiro.views.hooksStatus",
+          "name": "Hooks"
+        },
+        {
+          "id": "kiro.views.mcpServerStatus",
+          "name": "MCP Servers"
+        },
+        {
+          "id": "kiro.views.tasks",
+          "name": "Tasks"
         }
       ]
     },

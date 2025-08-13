@@ -115,6 +115,19 @@ export class VsCodeMessenger {
       vscode.commands.executeCommand("continue.toggleFullScreen");
     });
 
+    // Kiro: tasks state bridge
+    this.onWebview("kiro/getTasksState", async () => {
+      // Minimal bridge: use VS Code global state populated by KiroVSXExtension TaskManager
+      const state = this.context.workspaceState.get<{
+        currentTask: any | null;
+        queue: any[];
+      }>("kiro.tasks.state", { currentTask: null, queue: [] });
+      return state;
+    });
+    this.onWebview("kiro/showTasksPanel", async () => {
+      await vscode.commands.executeCommand("kiro.showTasksPanel");
+    });
+
     this.onWebview("acceptDiff", async ({ data: { filepath, streamId } }) => {
       await vscode.commands.executeCommand(
         "continue.acceptDiff",

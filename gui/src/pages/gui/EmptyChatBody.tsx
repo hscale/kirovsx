@@ -1,4 +1,5 @@
 import { ConversationStarterCards } from "../../components/ConversationStarters";
+import { KiroQuickStart } from "../../components/ConversationStarters/KiroQuickStart";
 import { ExploreHubCard } from "../../components/ExploreHubCard";
 import { OnboardingCard } from "../../components/OnboardingCard";
 
@@ -17,6 +18,7 @@ export function EmptyChatBody({ showOnboardingCard }: EmptyChatBodyProps) {
 
   return (
     <div className="mx-2 mt-2">
+      <KiroQuickStart />
       <ExploreHubCard />
       <ConversationStarterCards />
     </div>
