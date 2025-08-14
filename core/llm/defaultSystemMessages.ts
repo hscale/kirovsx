@@ -67,6 +67,8 @@ export const DEFAULT_PLAN_SYSTEM_MESSAGE = [getKiroBasePrompt(), PLAN_CORE].join
   "\n\n",
 );
 
+export const DEFAULT_SYSTEM_MESSAGES_URL = "https://docs.continue.dev/customize/deep-dives/system-messages";
+
 export { getKiroBasePrompt, getKiroTaskExecutionPrompt };
 
 
