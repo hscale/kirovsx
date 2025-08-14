@@ -1,0 +1,45 @@
+# Kiro Flow 1-2-3 Rule
+# This rule automatically provides context from your spec files
+# Active context found: test-project
+
+# Automatic Context Injection:
+# The following context is automatically combined and injected into all Continue interactions
+# to provide progressive context building and institutional memory.
+
+# Flow 1-2-3 Context for test-project
+
+## 1) Requirements
+# Test Requirements
+
+- Feature A should work
+- Feature B should be fast
+
+## 2) Design
+# Test Design
+
+- Use React components
+- State management with Redux
+
+## 3) Tasks
+# Test Tasks
+
+- [ ] Set up project structure
+- [ ] Implement Feature A
+- [ ] Test Feature B
+
+**Instructions for Continue:**
+- Always consider this context when responding
+- Reference specific requirements, design decisions, and tasks when relevant
+- Suggest updates to spec files when new information emerges
+- Maintain consistency with established design patterns
+- Prioritize tasks based on the current implementation phase
+
+
+# Rule Behavior:
+# - This context is automatically prepended to all Continue interactions
+# - Context is updated in real-time as you modify spec files
+# - Provides progressive context building (1-2-3 Flow)
+# - Maintains institutional memory across development sessions
+
+# File: test-project/requirements.md, design.md, tasks.md
+# Last Updated: 2025-08-14T05:25:14.875Z

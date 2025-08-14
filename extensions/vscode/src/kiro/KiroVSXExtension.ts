@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { FlowHeaderDecorationManager } from "./features/FlowHeaderDecoration";
 import { SpecHeaderCodeLensProvider } from "./features/SpecHeaderCodeLens";
 import { TasksCodeLensProvider } from "./features/TasksCodeLens";
+import { Flow123RuleProvider } from "./features/Flow123RuleProvider";
 import { TaskManager } from "./services/TaskManager";
 import { HooksStatusProvider } from "./views/HooksStatus";
 import { MCPServerStatus } from "./views/MCPServerStatus";
@@ -18,6 +19,7 @@ export class KiroVSXExtension {
   private mcpServerStatus?: MCPServerStatus;
   private taskManager?: TaskManager;
   private tasksView?: TasksViewProvider;
+  private flow123RuleProvider?: Flow123RuleProvider;
   private context: vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
@@ -172,6 +174,12 @@ export class KiroVSXExtension {
     this.taskManager = new TaskManager(this.context);
     this.tasksView = new TasksViewProvider(this.taskManager);
 
+    // Initialize Flow 1-2-3 rule provider and register with Continue
+    if (this.flow123RuleProvider) {
+      await this.flow123RuleProvider.registerFlow123Rule();
+      console.log("KiroVSX: Flow 1-2-3 rule provider initialized");
+    }
+
     // Suggest enabling CodeLens if disabled
     const codeLensEnabled = vscode.workspace
       .getConfiguration("editor")
@@ -212,6 +220,7 @@ export class KiroVSXExtension {
     this.steeringExplorer = new SteeringExplorerProvider(workspaceRoot);
     this.hooksStatus = new HooksStatusProvider(workspaceRoot);
     this.mcpServerStatus = new MCPServerStatus(workspaceRoot);
+    this.flow123RuleProvider = new Flow123RuleProvider(this.context);
   }
 
   private registerTreeViews(): void {
@@ -473,6 +482,27 @@ export class KiroVSXExtension {
           await vscode.env.clipboard.writeText(composed);
           vscode.window.showInformationMessage(
             "Flow 1-2-3 context copied to clipboard",
+          );
+        }
+      }),
+    );
+
+    // Refresh Flow 1-2-3 rule in Continue's rules system
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("kiro.refreshFlow123Rule", async () => {
+        if (!this.flow123RuleProvider) {
+          vscode.window.showErrorMessage("Flow 1-2-3 rule provider not initialized");
+          return;
+        }
+        
+        try {
+          await this.flow123RuleProvider.refreshRule();
+          vscode.window.showInformationMessage(
+            "Flow 1-2-3 rule refreshed. Continue will now use the latest spec context.",
+          );
+        } catch (error) {
+          vscode.window.showErrorMessage(
+            `Failed to refresh Flow 1-2-3 rule: ${error}`,
           );
         }
       }),

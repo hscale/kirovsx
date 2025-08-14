@@ -459,6 +459,11 @@
       {
         "command": "kiro.generateTasks",
         "title": "Generate Tasks (Kiro)"
+      },
+      {
+        "command": "kiro.refreshFlow123Rule",
+        "title": "Refresh Flow 1-2-3 Rule",
+        "icon": "$(refresh)"
       }
     ],
     "keybindings": [
@@ -694,6 +699,11 @@
           "command": "kiro.refreshSpecs",
           "when": "view == kiro.views.specExplorer",
           "group": "navigation@2"
+        },
+        {
+          "command": "kiro.refreshFlow123Rule",
+          "when": "view == kiro.views.specExplorer",
+          "group": "navigation@3"
         },
         {
           "command": "kiro.addHook",
