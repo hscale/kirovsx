@@ -631,9 +631,9 @@ export class KiroVSXExtension {
     const workspaceRoot = this.getWorkspaceRoot();
     if (!workspaceRoot) return;
 
-    // Watch for changes in .continue/kiro directory
+    // Watch for changes in .kiro directory
     const kiroWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(workspaceRoot, ".continue/kiro/**/*"),
+      new vscode.RelativePattern(workspaceRoot, ".kiro/**/*"),
     );
 
     kiroWatcher.onDidCreate(() => this.refreshAllViews());
@@ -1235,7 +1235,8 @@ Include specific, actionable rules that Continue can use to guide development.`;
   ): Promise<string | null> {
     const root = this.getWorkspaceRoot();
     if (!root) return null;
-    const rulesRoot = path.join(root, "KiroVSX", "rules");
+    // Read rules from workspace .kiro/rules to match user's files
+    const rulesRoot = path.join(root, ".kiro", "rules");
     const basePath = path.join(rulesRoot, "base_system_prompt.md");
     const specPathMap: Record<string, string> = {
       requirements: "spec_requirements_prompt.md",

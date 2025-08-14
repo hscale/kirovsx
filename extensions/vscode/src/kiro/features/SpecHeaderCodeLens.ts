@@ -56,3 +56,4 @@ export class SpecHeaderCodeLensProvider implements vscode.CodeLensProvider {
     return new vscode.CodeLens(range, cmd);
   }
 }
+

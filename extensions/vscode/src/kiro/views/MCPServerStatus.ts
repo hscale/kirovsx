@@ -221,3 +221,4 @@ export class MCPServerStatus
     return capabilities.length > 0 ? capabilities : ["tools"];
   }
 }
+
