@@ -1,11 +1,14 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
+import { Flow123RuleProvider } from "./features/Flow123RuleProvider";
 import { FlowHeaderDecorationManager } from "./features/FlowHeaderDecoration";
 import { SpecHeaderCodeLensProvider } from "./features/SpecHeaderCodeLens";
 import { TasksCodeLensProvider } from "./features/TasksCodeLens";
-import { Flow123RuleProvider } from "./features/Flow123RuleProvider";
 import { TaskManager } from "./services/TaskManager";
+import { HookExecutionEngine } from "./services/HookExecutionEngine";
+import { HookBuilderService } from "./services/HookBuilderService";
+import { SteeringRuleEngine } from "./services/SteeringRuleEngine";
 import { HooksStatusProvider } from "./views/HooksStatus";
 import { MCPServerStatus } from "./views/MCPServerStatus";
 import { SpecExplorerProvider } from "./views/SpecExplorer";
@@ -20,6 +23,9 @@ export class KiroVSXExtension {
   private taskManager?: TaskManager;
   private tasksView?: TasksViewProvider;
   private flow123RuleProvider?: Flow123RuleProvider;
+  private hookExecutionEngine?: HookExecutionEngine;
+  private hookBuilderService?: HookBuilderService;
+  private steeringRuleEngine?: SteeringRuleEngine;
   private context: vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
@@ -87,79 +93,76 @@ export class KiroVSXExtension {
       }),
     );
 
-    // Quick new task: Vibe
+    // New Task commands with steering rules integration
     this.context.subscriptions.push(
       vscode.commands.registerCommand("kiro.newTaskVibe", async () => {
-        const result = await this.showCenteredForm(
-          "New Task • Vibe",
-          [
-            {
-              id: "title",
-              label: "Title",
-              type: "text",
-              placeholder: "What do you want to explore/build?",
-            },
-            {
-              id: "description",
-              label: "Notes",
-              type: "textarea",
-              placeholder: "Optional context...",
-            },
-          ],
-          { submitLabel: "Start Vibe" },
-        );
-        if (!result) return;
-        const title = (result["title"] || "").trim();
-        const desc = (result["description"] || "").trim();
-        const prompt = `Let's start a Vibe session. Goal: ${title}\n\nNotes: ${desc}\n\nApproach: Ask clarifying questions, iterate quickly, propose small steps, and build incrementally. Present a short plan and the first actionable step.`;
+        const taskDescription = await vscode.window.showInputBox({
+          placeHolder: "Describe what you want to achieve (focus on feel and experience)",
+          prompt: "Vibe Mode: Focus on user experience, aesthetics, and emotional impact"
+        });
+
+        if (!taskDescription) return;
+
         try {
-          await vscode.commands.executeCommand(
-            "continue.sendMainUserInput",
-            prompt,
+          // Use steering rule engine to create enriched task
+          const enrichedTask = await this.steeringRuleEngine?.createNewTaskWithRules(
+            taskDescription, 
+            "vibe"
           );
-        } catch {
-          await vscode.env.clipboard.writeText(prompt);
+
+          if (enrichedTask) {
+            // Send enriched task to Continue chat
+            await vscode.commands.executeCommand(
+              "continue.sendMainUserInput",
+              enrichedTask
+            );
+
+            vscode.window.showInformationMessage(
+              "Vibe task created with steering rules and context!",
+              "View in Chat"
+            );
+          }
+        } catch (error) {
           vscode.window.showErrorMessage(
-            "Could not send to Continue. Prompt copied to clipboard.",
+            `Failed to create vibe task: ${error}`,
+            "Retry"
           );
         }
       }),
     );
 
-    // Quick new task: Spec
     this.context.subscriptions.push(
       vscode.commands.registerCommand("kiro.newTaskSpec", async () => {
-        const result = await this.showCenteredForm(
-          "New Task • Spec",
-          [
-            {
-              id: "title",
-              label: "Title",
-              type: "text",
-              placeholder: "Feature or change to plan",
-            },
-            {
-              id: "description",
-              label: "Scope / constraints",
-              type: "textarea",
-              placeholder: "Optional details...",
-            },
-          ],
-          { submitLabel: "Start Spec" },
-        );
-        if (!result) return;
-        const title = (result["title"] || "").trim();
-        const desc = (result["description"] || "").trim();
-        const prompt = `Start a Spec session. Title: ${title}\n\nContext: ${desc}\n\nPlease lead with: 1) Requirements (clear acceptance criteria), 2) Design outline (key components/APIs), 3) Implementation tasks (ordered checklist). Keep it concise and ready to save into .kiro/specs.`;
+        const taskDescription = await vscode.window.showInputBox({
+          placeHolder: "Describe the technical requirements and specifications",
+          prompt: "Spec Mode: Focus on technical details, architecture, and implementation"
+        });
+
+        if (!taskDescription) return;
+
         try {
-          await vscode.commands.executeCommand(
-            "continue.sendMainUserInput",
-            prompt,
+          // Use steering rule engine to create enriched task
+          const enrichedTask = await this.steeringRuleEngine?.createNewTaskWithRules(
+            taskDescription, 
+            "spec"
           );
-        } catch {
-          await vscode.env.clipboard.writeText(prompt);
+
+          if (enrichedTask) {
+            // Send enriched task to Continue chat
+            await vscode.commands.executeCommand(
+              "continue.sendMainUserInput",
+              enrichedTask
+            );
+
+            vscode.window.showInformationMessage(
+              "Spec task created with steering rules and context!",
+              "View in Chat"
+            );
+          }
+        } catch (error) {
           vscode.window.showErrorMessage(
-            "Could not send to Continue. Prompt copied to clipboard.",
+            `Failed to create spec task: ${error}`,
+            "Retry"
           );
         }
       }),
@@ -173,6 +176,11 @@ export class KiroVSXExtension {
     // Init task manager and view
     this.taskManager = new TaskManager(this.context);
     this.tasksView = new TasksViewProvider(this.taskManager);
+
+    // Initialize hook services
+    this.hookExecutionEngine = new HookExecutionEngine(this.context);
+    this.hookBuilderService = new HookBuilderService(this.context);
+    this.steeringRuleEngine = new SteeringRuleEngine(this.context);
 
     // Initialize Flow 1-2-3 rule provider and register with Continue
     if (this.flow123RuleProvider) {
@@ -503,6 +511,34 @@ export class KiroVSXExtension {
         } catch (error) {
           vscode.window.showErrorMessage(
             `Failed to refresh Flow 1-2-3 rule: ${error}`,
+          );
+        }
+      }),
+    );
+
+    // Refresh steering rules for institutional memory
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("kiro.refreshSteeringRules", async () => {
+        if (!this.steeringRuleEngine) {
+          vscode.window.showErrorMessage("Steering rule engine not initialized");
+          return;
+        }
+        
+        try {
+          await this.steeringRuleEngine.refreshSteeringRules();
+          const stats = this.steeringRuleEngine.getRuleStatistics();
+          
+          vscode.window.showInformationMessage(
+            `Steering rules refreshed! Loaded ${stats.total} rules across ${Object.keys(stats.categories).length} categories.`,
+            "View Stats"
+          ).then(choice => {
+            if (choice === "View Stats") {
+              this.showSteeringRuleStats(stats);
+            }
+          });
+        } catch (error) {
+          vscode.window.showErrorMessage(
+            `Failed to refresh steering rules: ${error}`,
           );
         }
       }),
@@ -1303,5 +1339,55 @@ Include specific, actionable rules that Continue can use to guide development.`;
         "Could not send to Continue. Prompt copied to clipboard.",
       );
     }
+  }
+
+  /**
+   * Show steering rule statistics
+   */
+  private showSteeringRuleStats(stats: { total: number; categories: Record<string, number> }): void {
+    const panel = vscode.window.createWebviewPanel(
+      "kiroSteeringStats",
+      "Steering Rules Statistics",
+      vscode.ViewColumn.One,
+      { enableScripts: true }
+    );
+
+    const categoriesHtml = Object.entries(stats.categories)
+      .map(([category, count]) => `<li><strong>${category}:</strong> ${count} rules</li>`)
+      .join('');
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: var(--vscode-font-family); padding: 20px; }
+            .stat { margin: 10px 0; padding: 10px; background: var(--vscode-editor-background); border-radius: 4px; }
+            .total { font-size: 1.2em; font-weight: bold; color: var(--vscode-textLink-foreground); }
+            .categories { margin-top: 20px; }
+            .category-list { list-style: none; padding: 0; }
+            .category-list li { padding: 5px 0; border-bottom: 1px solid var(--vscode-panel-border); }
+          </style>
+        </head>
+        <body>
+          <h2>Steering Rules Statistics</h2>
+          <div class="stat total">
+            Total Rules: ${stats.total}
+          </div>
+          <div class="categories">
+            <h3>Categories (${Object.keys(stats.categories).length})</h3>
+            <ul class="category-list">
+              ${categoriesHtml}
+            </ul>
+          </div>
+          <div class="stat">
+            <p><strong>Institutional Memory Status:</strong> Active</p>
+            <p>These rules are automatically applied to new tasks based on relevance scoring.</p>
+          </div>
+        </body>
+      </html>
+    `;
+
+    panel.webview.html = html;
   }
 }

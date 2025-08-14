@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { Rule } from "core";
 
 /**
  * Flow 1-2-3 Rule Provider that automatically combines context from spec files

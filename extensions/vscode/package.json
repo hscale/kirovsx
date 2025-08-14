@@ -464,6 +464,11 @@
         "command": "kiro.refreshFlow123Rule",
         "title": "Refresh Flow 1-2-3 Rule",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.refreshSteeringRules",
+        "title": "Refresh Steering Rules",
+        "icon": "$(refresh)"
       }
     ],
     "keybindings": [
@@ -724,6 +729,11 @@
           "command": "kiro.refreshSteering",
           "when": "view == kiro.views.steeringExplorer",
           "group": "navigation@2"
+        },
+        {
+          "command": "kiro.refreshSteeringRules",
+          "when": "view == kiro.views.steeringExplorer",
+          "group": "navigation@3"
         },
         {
           "command": "kiro.connectMCP",
