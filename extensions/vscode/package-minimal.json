@@ -1,0 +1,100 @@
+{
+  "name": "kirovsx",
+  "displayName": "KiroVSX",
+  "description": "Kiro methodology integration for VS Code - Progressive context building, institutional memory, and event-driven automation",
+  "version": "1.0.0",
+  "publisher": "kirovsx",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension-standalone.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "kiro.newTaskVibe",
+        "title": "New Task • Vibe",
+        "icon": "$(heart)"
+      },
+      {
+        "command": "kiro.newTaskSpec",
+        "title": "New Task • Spec",
+        "icon": "$(code)"
+      },
+      {
+        "command": "kiro.refreshFlow123Rule",
+        "title": "Refresh Flow 1-2-3 Rule",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.refreshSteeringRules",
+        "title": "Refresh Steering Rules",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kiro.showStatus",
+        "title": "Show KiroVSX Status",
+        "icon": "$(info)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "kiro.newTaskVibe",
+          "when": "true"
+        },
+        {
+          "command": "kiro.newTaskSpec",
+          "when": "true"
+        },
+        {
+          "command": "kiro.refreshFlow123Rule",
+          "when": "true"
+        },
+        {
+          "command": "kiro.refreshSteeringRules",
+          "when": "true"
+        },
+        {
+          "command": "kiro.showStatus",
+          "when": "true"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vsce": "^2.0.0"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hscale/kirovsx.git"
+  },
+  "homepage": "https://github.com/hscale/kirovsx",
+  "bugs": {
+    "url": "https://github.com/hscale/kirovsx/issues"
+  },
+  "qna": "https://github.com/hscale/kirovsx/discussions",
+  "license": "MIT",
+  "keywords": [
+    "kiro",
+    "methodology",
+    "context",
+    "automation",
+    "productivity"
+  ]
+}
